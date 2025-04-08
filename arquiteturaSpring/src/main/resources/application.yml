@@ -1,0 +1,20 @@
+# É possível substituir o application.properties por application.yml
+# O arquivo application.yml é mais legível e organizado para configurações complexas
+# É importante lembrar que não é possível utilizar os dois arquivos ao mesmo tempo,
+# mas é possível migrar uma aplicação que já utiliza o application.properties para o application.yml
+# Nesse caso este arquito mantém as mesmas configuragoes do application.properties
+
+spring:
+  application:
+    name: arquiteturaSpring
+  jpa:
+    show-sql: true
+# Definit a inicialização dos Beans de forma tardia. O padrão é a não utilizar a inicialização tarida.
+  main:
+    lazy-initialization: false
+# Dentro do application.properties é possível criar propriedades personalizadas
+app:
+  config:
+    variable: valor da variável personalizada no application.yml
+    value1: 500
+
