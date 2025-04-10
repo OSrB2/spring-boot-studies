@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: libraryapi
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true # Essa configuração é para mostrar as queries que estão sendo executadas no console
+    hibernate:
+      ddl-auto: update # Essa configuração é para criar o banco de dados automaticamente, existe também o none, create, create-drop e validate
+                       # essa configuração ddl-auto é apenas para desenvolvimento e a nível de estudo, em produção não é recomendado usar
+    properties:
+      hibernate.format_sql: true # Essa configuração é para formatar as queries que estão sendo executadas no console
+
+# create -> cria o banco de dados toda vez que a aplicação é iniciada
+# create-drop -> cria o banco de dados toda vez que a aplicação é iniciada e deleta quando a aplicação é parada
+# validate -> valida se o banco de dados está correto, se não estiver ele não inicia a aplicação
