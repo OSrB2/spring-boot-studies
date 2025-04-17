@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString(exclude = "books") // Evitando o loop infinito no toString, pois o autor tem uma lista de livros
+@EntityListeners(AuditingEntityListener.class) // Anotação do Spring Data JPA para habilitar o auditoria
 public class Author {
 
   @Id
@@ -30,6 +35,19 @@ public class Author {
   @Column(name = "nationality", length = 50, nullable = false)
   private String nationality;
 
-  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)  // Por padrão @OneToMany é LAZY, mas é bom deixar explícito
+  @OneToMany(mappedBy = "author", fetch = FetchType.LAZY
+  //  cascade = CascadeType.ALL
+  )  // Por padrão @OneToMany é LAZY, mas é bom deixar explícito
   private List<Book> books;
+
+  @CreatedDate // Anotação do Spring Data JPA para data de criação, ela cria a data automaticamente
+  @Column(name = "date_registration")
+  private LocalDateTime dateRegistration;
+
+  @LastModifiedDate // Anotação do Spring Data JPA para data de atualização, ela cria a data automaticamente
+  @Column(name = "date_update")
+  private LocalDateTime dateUpdate;
+
+  @Column(name = "id_user")
+  private UUID idUser;
 }

@@ -25,6 +25,9 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
   // SELECT * FROM tb_book WHERE id_author = id
   List<Book> findByAuthor(Author author); // findBy é um padrão do Spring Data JPA para criar consultas
 
+  // SELECT * FROM tb_book WHERE id_author = id -> Verifica se existe livro com o autor
+  boolean existsByAuthor(Author author);
+
   // SELECT & FROM tb_book WHERE title = title
   List<Book> findByTitle(String title);
 
