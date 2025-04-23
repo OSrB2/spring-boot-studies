@@ -8,10 +8,10 @@ import io.github.spring_boot_studies.libraryapi.model.BookGenre;
 import io.github.spring_boot_studies.libraryapi.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -43,9 +43,9 @@ public class BookController implements GenericController {
           return ResponseEntity.ok(bookDTO);
         }).orElseGet(() -> ResponseEntity.notFound().build());
   }
-
+// Usando paginação
   @GetMapping
-  public ResponseEntity<List<ResponseResearchBookDTO>> searchWithFilter(
+  public ResponseEntity<Page<ResponseResearchBookDTO>> searchWithFilter(
       @RequestParam(value = "isbn", required = false)
       String isbn,
       @RequestParam(value = "title", required = false)
@@ -55,15 +55,34 @@ public class BookController implements GenericController {
       @RequestParam(value = "gender", required = false)
       BookGenre gender,
       @RequestParam(value = "publication-year", required = false)
-      Integer publicationYear) {
+      Integer publicationYear,
+      @RequestParam(value = "page", defaultValue = "0")
+      Integer page,
+      @RequestParam(value = "page-size", defaultValue = "10")
+      Integer pageSize
+    ){
+    
+    Page<Book> resultPage = bookService.searchBookWithFilter(isbn, title, authorName, gender, publicationYear, page, pageSize);
+    Page<ResponseResearchBookDTO> result = resultPage.map(bookMapper::toDTO);
 
-    var result = bookService.searchBookWithFilter(isbn, title, authorName, gender, publicationYear);
-    var resulstList = result
-        .stream()
-        .map(bookMapper::toDTO)
-        .collect(Collectors.toList());
+    return ResponseEntity.ok(result);
+  }
 
-    return ResponseEntity.ok(resulstList);
+  @PutMapping("/{id}")
+  public ResponseEntity<?> updateBook(@PathVariable("id") String id, @RequestBody @Valid RegisterBookDTO bookDTO) {
+    return bookService.BookById(UUID.fromString(id))
+        .map(book -> {
+          Book bookEntity = bookMapper.toEntity(bookDTO);
+          book.setPublicationDate(bookEntity.getPublicationDate());
+          book.setIsbn(bookEntity.getIsbn());
+          book.setPrice(bookEntity.getPrice());
+          book.setGender(bookEntity.getGender());
+          book.setTitle(bookEntity.getTitle());
+          book.setAuthor(bookEntity.getAuthor());
+
+          bookService.update(book);
+          return ResponseEntity.noContent().build();
+        }).orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @DeleteMapping("/{id}")
