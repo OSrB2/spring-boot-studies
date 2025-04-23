@@ -10,7 +10,7 @@ CREATE TABLE tb_author(
 
 CREATE TABLE tb_book (
   id UUID NOT NULL PRIMARY KEY,
-  isbn VARCHAR(20) NOT NULL,
+  isbn VARCHAR(20) NOT NULL UNIQUE,
   title VARCHAR(150) NOT NULL,
   publication_date DATE NOT NULL,
   gender VARCHAR(30) NOT NULL,

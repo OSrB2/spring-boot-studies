@@ -89,5 +89,4 @@ public class AuthorService {
   public boolean authorHasBook(Author author) {
     return bookRepository.existsByAuthor(author);
   }
-
 }

@@ -4,6 +4,7 @@ import io.github.spring_boot_studies.libraryapi.model.Author;
 import io.github.spring_boot_studies.libraryapi.model.Book;
 import io.github.spring_boot_studies.libraryapi.model.BookGenre;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +21,9 @@ import java.util.UUID;
  */
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, UUID> {
+public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
+  // JpaSpecificationExecutor -> Permite criar consultas mais complexas, como filtros, ordenações e paginação.
+
   // Query method para buscar livro pelo id do autor
   // SELECT * FROM tb_book WHERE id_author = id
   List<Book> findByAuthor(Author author); // findBy é um padrão do Spring Data JPA para criar consultas
