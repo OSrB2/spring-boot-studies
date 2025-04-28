@@ -7,6 +7,7 @@ import io.github.spring_boot_studies.libraryapi.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,6 +26,7 @@ public class AuthorController implements GenericController {
   private final AuthorMapper authorMapper;
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN')") // Somente usuários com ROLE de ADMIN conseguem cadastrar autores
   public ResponseEntity<Void> registerAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
     Author authorEntity = authorMapper.toEntity(authorDTO); // Converte o AuthorDTO para Author
     service.registarAuthor(authorEntity);
@@ -33,6 +35,7 @@ public class AuthorController implements GenericController {
   }
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('USER', 'ADMIN')") // Usuários com ROLE de USER ou ADMIN conseguem acessar
   public ResponseEntity<AuthorDTO> findAuthorById(@PathVariable("id") String id) {
     var idAuthor = UUID.fromString(id);
 
@@ -45,6 +48,7 @@ public class AuthorController implements GenericController {
   }
 
   @GetMapping
+  @PreAuthorize("hasAnyRole('USER', 'ADMIN')") // Usuários com ROLE de USER ou ADMIN conseguem acessar
   public ResponseEntity<List<AuthorDTO>> searchWithFilter(@RequestParam(value = "name", required = false) String name,
                                                           @RequestParam(value = "nationality", required = false) String nationality) {
 //  List<Author> authorList = service.searchAuthorWithFilter(name, nationality);
@@ -58,6 +62,7 @@ public class AuthorController implements GenericController {
   }
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')") // Somente usuários com ROLE de ADMIN conseguem cadastrar autores
   public ResponseEntity<Void> updateAuthor(@PathVariable("id") String id, @RequestBody @Valid AuthorDTO authorDTO) {
     var idAuthor = UUID.fromString(id);
     Optional<Author> authorOptional = service.authorById(idAuthor);
@@ -75,6 +80,7 @@ public class AuthorController implements GenericController {
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')") // Somente usuários com ROLE de ADMIN conseguem cadastrar autores
   public ResponseEntity<Void> deleteAuthor(@PathVariable("id") String id) {
     var idAuthor = UUID.fromString(id);
     Optional<Author> authorOptional = service.authorById(idAuthor);

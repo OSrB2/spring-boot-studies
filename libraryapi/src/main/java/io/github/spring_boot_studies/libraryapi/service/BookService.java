@@ -2,7 +2,9 @@ package io.github.spring_boot_studies.libraryapi.service;
 
 import io.github.spring_boot_studies.libraryapi.model.Book;
 import io.github.spring_boot_studies.libraryapi.model.BookGenre;
+import io.github.spring_boot_studies.libraryapi.model.User;
 import io.github.spring_boot_studies.libraryapi.repository.BookRepository;
+import io.github.spring_boot_studies.libraryapi.security.SecurityService;
 import io.github.spring_boot_studies.libraryapi.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,9 +24,12 @@ public class BookService {
 
   private final BookRepository bookRepository;
   private final BookValidator bookValidator;
+  private final SecurityService securityService;
 
   public Book registerBook(Book book) {
     bookValidator.validate(book);
+    User user = securityService.getLoggedUser();
+    book.setUser(user);
     return bookRepository.save(book);
   }
 

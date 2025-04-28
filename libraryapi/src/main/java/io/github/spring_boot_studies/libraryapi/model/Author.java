@@ -1,6 +1,7 @@
 package io.github.spring_boot_studies.libraryapi.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,8 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_author", schema = "public") // O schema não é obrigatório quando for public, mas é uma boa prática
-@Getter
-@Setter
+@Data
 @ToString(exclude = "books") // Evitando o loop infinito no toString, pois o autor tem uma lista de livros
 @EntityListeners(AuditingEntityListener.class) // Anotação do Spring Data JPA para habilitar o auditoria
 public class Author {
@@ -48,6 +48,7 @@ public class Author {
   @Column(name = "date_update")
   private LocalDateTime dateUpdate;
 
-  @Column(name = "id_user")
-  private UUID idUser;
+  @ManyToOne
+  @JoinColumn(name = "id_user")
+  private User user;
 }

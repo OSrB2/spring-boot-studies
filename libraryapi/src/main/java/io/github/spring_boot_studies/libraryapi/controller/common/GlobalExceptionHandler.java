@@ -6,6 +6,7 @@ import io.github.spring_boot_studies.libraryapi.exception.DuplicateRecordExcepti
 import io.github.spring_boot_studies.libraryapi.exception.InvalidFieldException;
 import io.github.spring_boot_studies.libraryapi.exception.OperationNotPermittedException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,6 +53,13 @@ public class GlobalExceptionHandler {
     return new ResponseError(HttpStatus.UNPROCESSABLE_ENTITY.value(),
         "Validation error",
         List.of(new FieldErrorImpl(e.getField(), e.getMessage())));
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public ResponseError handleAccesDeniedException(AccessDeniedException e) {
+    return new ResponseError(HttpStatus.FORBIDDEN.value(),
+        "Access denied.", List.of());
   }
 
   @ExceptionHandler(RuntimeException.class)

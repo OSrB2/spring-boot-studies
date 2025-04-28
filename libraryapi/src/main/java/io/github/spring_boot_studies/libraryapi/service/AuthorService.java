@@ -2,8 +2,10 @@ package io.github.spring_boot_studies.libraryapi.service;
 
 import io.github.spring_boot_studies.libraryapi.exception.OperationNotPermittedException;
 import io.github.spring_boot_studies.libraryapi.model.Author;
+import io.github.spring_boot_studies.libraryapi.model.User;
 import io.github.spring_boot_studies.libraryapi.repository.AuthorRepository;
 import io.github.spring_boot_studies.libraryapi.repository.BookRepository;
+import io.github.spring_boot_studies.libraryapi.security.SecurityService;
 import io.github.spring_boot_studies.libraryapi.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -21,6 +23,7 @@ public class AuthorService {
   private final AuthorRepository repository;
   private final AuthorValidator validator;
   private final BookRepository bookRepository;
+  private final SecurityService securityService;
 
 // Construtor padrão, sem a annotation @RequiredArgsConstructor
 //  public AuthorService(AuthorRepository repository, AuthorValidator validator, BookRepository bookRepository) {
@@ -31,6 +34,8 @@ public class AuthorService {
 
   public Author registarAuthor(Author author) {
     validator.validate(author);
+    User user = securityService.getLoggedUser();
+    author.setUser(user);
     return repository.save(author);
   }
 

@@ -13,6 +13,14 @@ spring:
                        # essa configuração ddl-auto é apenas para desenvolvimento e a nível de estudo, em produção não é recomendado usar
     properties:
       hibernate.format_sql: true # Essa configuração é para formatar as queries que estão sendo executadas no console
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+
 
 # create -> cria o banco de dados toda vez que a aplicação é iniciada
 # create-drop -> cria o banco de dados toda vez que a aplicação é iniciada e deleta quando a aplicação é parada

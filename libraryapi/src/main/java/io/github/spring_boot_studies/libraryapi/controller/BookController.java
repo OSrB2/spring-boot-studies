@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class BookController implements GenericController {
   private final BookMapper bookMapper;
 
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN')") // Somente usuários com ROLE de ADMIN conseguem cadastrar livros
   public ResponseEntity<Void> registerBook(@RequestBody @Valid RegisterBookDTO bookDTO) {
     // Mapear o DTO para a entidade
     Book book = bookMapper.toEntity(bookDTO);
@@ -35,6 +37,7 @@ public class BookController implements GenericController {
   }
 
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('USER', 'ADMIN')") // Usuários com ROLE de USER ou ADMIN conseguem acessar
   public ResponseEntity<ResponseResearchBookDTO> findBookById(@PathVariable("id") String id) {
     return bookService.BookById(UUID.fromString(id))
         .map(book -> {
@@ -42,8 +45,10 @@ public class BookController implements GenericController {
           return ResponseEntity.ok(bookDTO);
         }).orElseGet(() -> ResponseEntity.notFound().build());
   }
+
 // Usando paginação
   @GetMapping
+  @PreAuthorize("hasAnyRole('USER', 'ADMIN')") // Usuários com ROLE de USER ou ADMIN conseguem acessar
   public ResponseEntity<Page<ResponseResearchBookDTO>> searchWithFilter(
       @RequestParam(value = "isbn", required = false)
       String isbn,
@@ -68,6 +73,7 @@ public class BookController implements GenericController {
   }
 
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')") // Somente usuários com ROLE de ADMIN conseguem atualizar livros
   public ResponseEntity<?> updateBook(@PathVariable("id") String id, @RequestBody @Valid RegisterBookDTO bookDTO) {
     return bookService.BookById(UUID.fromString(id))
         .map(book -> {
@@ -85,6 +91,7 @@ public class BookController implements GenericController {
   }
 
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')") // Somente usuários com ROLE de ADMIN conseguem deletar livros
   public ResponseEntity<?> deleteBook(@PathVariable("id") String id) {
     return bookService.BookById(UUID.fromString(id))
         .map(book -> {
