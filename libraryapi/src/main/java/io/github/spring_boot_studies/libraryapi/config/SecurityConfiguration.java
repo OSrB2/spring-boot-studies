@@ -1,6 +1,7 @@
 package io.github.spring_boot_studies.libraryapi.config;
 
 import io.github.spring_boot_studies.libraryapi.security.CustomUserDetailsService;
+import io.github.spring_boot_studies.libraryapi.security.JwtCustomAuthenticationFilter;
 import io.github.spring_boot_studies.libraryapi.security.SocialLoginSuccesHandler;
 import io.github.spring_boot_studies.libraryapi.service.UserService;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -29,7 +33,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
   // Configuração padrão do Spring Security
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, SocialLoginSuccesHandler socialLoginSuccesHandler) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+                                                 SocialLoginSuccesHandler socialLoginSuccesHandler,
+                                                 JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception {
     return httpSecurity
         .csrf(AbstractHttpConfigurer::disable) // Desabilita a proteção CSRF)
         //.formLogin(Customizer.withDefaults()) // Habilita o login padrão do Spring Security
@@ -54,16 +60,19 @@ public class SecurityConfiguration {
               .loginPage("/login") // Define a página de login personalizada com login social
               .successHandler(socialLoginSuccesHandler);
         })
+        .oauth2ResourceServer(oauth2RS ->
+            oauth2RS.jwt(Customizer.withDefaults())) // Configura o servidor de recursos OAuth2 para usar JWT como formato de token
+        .addFilterAfter(jwtCustomAuthenticationFilter, BearerTokenAuthenticationFilter.class)
         .build();
   }
 
   // Define um bean do tipo PasswordEncoder que utiliza o algoritmo BCrypt para codificar senhas.
   // O parâmetro "10" representa o fator de força (work factor), que determina a complexidade do hash.
-  // Um fator maior aumenta a segurança, mas também o tempo de processamento.
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(10);
-  }
+//  // Um fator maior aumenta a segurança, mas também o tempo de processamento.
+//  @Bean
+//  public PasswordEncoder passwordEncoder() {
+//    return new BCryptPasswordEncoder(10);
+//  }
 
   // Aqui serve para definir um UserDetailsService personalizado, se necessário
   // Pode usar um banco de dados, LDAP, ou qualquer outra fonte de dados para autenticação
@@ -94,8 +103,22 @@ public class SecurityConfiguration {
 //     return new InMemoryUserDetailsManager(user1, user2);
 //  }
 
+  // Configura o prefixo role
   @Bean
   public GrantedAuthorityDefaults grantedAuthorityDefaults() {
     return new GrantedAuthorityDefaults(""); // Isso remove o prefixo "ROLE_" das roles
+  }
+
+  // Configura no token jwt o prefixo scope
+  // Essa configuração define um conversor de autenticação JWT personalizado
+  @Bean
+  public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    authoritiesConverter.setAuthorityPrefix(""); // Remove o prefixo "ROLE_" das roles
+
+    var converter = new JwtAuthenticationConverter();
+    converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+
+    return converter; // Retorna o conversor de autenticação JWT configurado
   }
 }

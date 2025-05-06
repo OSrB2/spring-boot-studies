@@ -4,6 +4,7 @@ import io.github.spring_boot_studies.libraryapi.security.CustomAuthentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -24,6 +25,16 @@ public class LoginViewController {
 
     // Retorna o nome da view que será renderizada
     return "Olá " + authentication.getName(); // O Spring irá procurar por um arquivo chamado "home.html" na pasta de templates
+  }
+
+  @GetMapping("/authorized")
+  @ResponseBody
+  public String getAuthorizationCode(@RequestParam("code") String code) {
+    // Aqui você pode usar o código de autorização para obter um token de acesso
+    // e fazer chamadas à API do Google, se necessário.
+    // Por exemplo, você pode usar o RestTemplate ou WebClient para fazer uma solicitação HTTP.
+
+    return "Authorization code: " + code; // Retorna o código de autorização recebido
   }
 }
 

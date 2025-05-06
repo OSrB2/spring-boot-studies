@@ -65,12 +65,6 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!--	Dependencia Oauth2 - Login Social com o Google	-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -87,11 +81,29 @@
 			<scope>test</scope>
 		</dependency>
 
-    	<!--	Hibernate Dependency	-->
+    	<!--  Hibernate Dependency	-->
 		<dependency>
 			<groupId>io.hypersistence</groupId>
 			<artifactId>hypersistence-utils-hibernate-63</artifactId>
 			<version>3.9.9</version>
+		</dependency>
+		<!--  Dotenv dependency-->
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<!-- OAuth2 Authorization Server dependency -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
+		</dependency>
+
+		<!--	Dependencia Oauth2 - Login Social com o Google	-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
 	</dependencies>
 

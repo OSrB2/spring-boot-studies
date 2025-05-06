@@ -66,7 +66,7 @@ public class SocialLoginSuccesHandler extends SavedRequestAwareAuthenticationSuc
     return user;
   }
 
-  //
+  // Esse método é responsável por pegar o login do usuário a partir do email
   private String getLoginFromEmail(String email) {
     return email.substring(0, email.indexOf("@"));
   }

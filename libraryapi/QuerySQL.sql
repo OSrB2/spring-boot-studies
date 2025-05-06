@@ -28,3 +28,11 @@ CREATE TABLE tb_user (
   password VARCHAR(300) NOT NULL,
   roles VARCHAR[]
 )
+
+CREATE TABLE tb_client (
+  id UUID NOT NULL PRIMARY KEY,
+  client_id VARCHAR(150) NOT NULL,
+  client_secret VARCHAR(400) NOT NULL,
+  redirect_uri VARCHAR(200) NOT NULL,
+  scope VARCHAR(50)
+)
