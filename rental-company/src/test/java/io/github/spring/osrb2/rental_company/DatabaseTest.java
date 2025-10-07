@@ -1,9 +1,6 @@
 package io.github.spring.osrb2.rental_company;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,10 +16,20 @@ public class DatabaseTest {
     connection.createStatement().execute("CREATE TABLE users (id INT, name VARCHAR)");
   }
 
-  @Test
+  @BeforeEach
   @DisplayName("Should insert user in table users")
   void insertUserTest() throws Exception {
     connection.createStatement().execute("insert into users(id, name) values (1, 'pedro')");
+  }
+
+  // @Disabled -> Desabilita o teste
+  @Test
+  @DisplayName("Should verify if user exist")
+  void testUserExist() throws SQLException {
+    var result =
+        connection.createStatement().executeQuery("select * from users where id = 1");
+
+    Assertions.assertTrue(result.next());
   }
 
   @AfterAll // -> IMPORTANTE!! @AfterAll deve ser colocado em um método "static" obrigatoriamente. E após todos os testes.
