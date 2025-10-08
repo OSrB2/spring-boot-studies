@@ -11,7 +11,7 @@ public class CarTest {
   @DisplayName("Should calculate the rental correct value")
   void shouldCalculateRentalValue() {
     // 1. Cenário
-    Car car = new Car("Sedan", 100.0);
+    Car car = new Car("Sedan", 100.0, 2025);
 
     // 2. Execução
     double total = car.calculateRentValue(3);
@@ -24,7 +24,7 @@ public class CarTest {
   @DisplayName("Should calculate the rental correct value with amount")
   void shouldCalculateRentalValueAmount() {
     // 1. Cenário
-    Car car = new Car("Sedan", 100.0);
+    Car car = new Car("Sedan", 100.0, 2025);
     int numberDays = 6;
 
     // 2. Execução

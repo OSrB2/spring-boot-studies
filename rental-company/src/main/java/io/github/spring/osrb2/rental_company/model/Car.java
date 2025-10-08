@@ -3,10 +3,12 @@ package io.github.spring.osrb2.rental_company.model;
 public class Car {
   private String model;
   private double dailyValue;
+  private int carYear;
 
-  public Car(String model, Double dailyValue) {
+  public Car(String model, Double dailyValue, int carYear) {
     this.model = model;
     this.dailyValue = dailyValue;
+    this.carYear = carYear;
   }
 
   public double calculateRentValue(int days) {
@@ -31,5 +33,13 @@ public class Car {
 
   public void setDailyValue(Double dailyValue) {
     this.dailyValue = dailyValue;
+  }
+
+  public int getCarYear() {
+    return carYear;
+  }
+
+  public void setCarYear(int carYear) {
+    this.carYear = carYear;
   }
 }

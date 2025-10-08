@@ -16,7 +16,7 @@ public class ReservationTest {
 
   @BeforeEach
   void config() {
-    car = new Car("Sedan", 100.0);
+    car = new Car("Sedan", 100.0, 2025);
     client = new Client("Maria");
   }
 
